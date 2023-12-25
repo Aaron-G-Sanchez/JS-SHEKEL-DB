@@ -5,9 +5,9 @@ const seedSync = async () => {
     console.log("Loading...")
 
     const users = [ {
-        userName: "CYCLE"
+        userName: "PINCHE"
     }, {
-        userName: "OPAL"
+        userName: "Opal"
     }]
 
     await db.sync({ force: true })
@@ -16,7 +16,7 @@ const seedSync = async () => {
     console.log("Seed has been planted!")
 }
 
-seedSync()
+// seedSync()
 
 module.exports = {
     seedSync

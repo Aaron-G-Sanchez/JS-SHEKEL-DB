@@ -15,4 +15,12 @@ describe('User model tests', () => {
     expect(Array.isArray(userArr)).toBe(true)
     expect(userArr[0]).toBeInstanceOf(User)
     })
+
+    test('Should add a user to the User table', async() => {
+        const pabs = await User.create({
+            userName: 'Gigglet'
+        })
+
+        expect(pabs).toBeInstanceOf(User)
+    })
 })
