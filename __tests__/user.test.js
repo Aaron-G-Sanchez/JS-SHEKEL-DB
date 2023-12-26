@@ -17,17 +17,16 @@ describe('User model tests', () => {
     })
 
     test('Should add a user to the User table', async() => {
-        const pabs = await User.create({
-            userName: 'Gigglet'
+        const newUser = await User.create({
+            userName: 'N00b'
         })
 
-        expect(pabs).toBeInstanceOf(User)
+        expect(newUser).toBeInstanceOf(User)
     })
 
-    // Because all users START with 100 shekels, we know what the values should be when a wager of 10 is  called by a new user
     test('Should wager and modify the shekel count', async() => {
+        // Because all users START with 100 shekels, we know what the values should be when a wager of 10 is  called by a new user
         const wager = 10
-
         let user = await User.findByPk(1)
 
         await user.update({
