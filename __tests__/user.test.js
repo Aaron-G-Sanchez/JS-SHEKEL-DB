@@ -30,10 +30,14 @@ describe('User model tests', () => {
         let user = await User.findByPk(1)
 
         await user.update({
-            skekelCount: user.shekelCount -= wager
+            shekelCount: user.shekelCount -= wager
         })
 
+        expect(user).toBeInstanceOf(User)
         expect(user).toHaveProperty('shekelCount')
+        expect(user.userName).toBe("PINCHE")
         expect(user.shekelCount).toBe(90)
     })
+        
+    
 })
