@@ -23,4 +23,18 @@ describe('User model tests', () => {
 
         expect(pabs).toBeInstanceOf(User)
     })
+
+    // Because all users START with 100 shekels, we know what the values should be when a wager of 10 is  called by a new user
+    test('Should wager and modify the shekel count', async() => {
+        const wager = 10
+
+        let user = await User.findByPk(1)
+
+        await user.update({
+            skekelCount: user.shekelCount -= wager
+        })
+
+        expect(user).toHaveProperty('shekelCount')
+        expect(user.shekelCount).toBe(90)
+    })
 })
