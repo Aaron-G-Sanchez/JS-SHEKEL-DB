@@ -17,4 +17,14 @@ describe('Testing the API endpoint', () => {
       expect(user).toHaveProperty('shekelCount')
     })
   })
+
+  test('GET a user by username', async () => {
+    const username = "PINCHE"
+    const response = await request(app).get(`/users/${username}`)
+
+    console.log(response.body)
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty('userName')
+    expect(response.body).toHaveProperty('shekelCount')
+  })
 })

@@ -21,7 +21,7 @@ userRouter.get('/:username', async(req, res, next) => {
   const username = req.params
 
   try {
-    const user = await User.findAll({
+    const user = await User.findOne({
       where: {
         userName: username.username
       }
