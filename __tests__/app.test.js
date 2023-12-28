@@ -6,9 +6,7 @@ const request = require('supertest')
 
 describe('Testing the API endpoint', () => {
   test('GET all users', async () => {
-    const response = await request(app).get('/api')
-
-    console.log(response.body.users[1])
+    const response = await request(app).get('/users')
 
     expect(response.status).toBe(200)
     expect(response.body).toHaveProperty('users')

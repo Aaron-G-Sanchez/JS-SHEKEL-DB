@@ -6,7 +6,7 @@ const { userRouter } = require('../src/router/user')
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.use('/api', userRouter)
+app.use('/users', userRouter)
 
 module.exports = {
   app
