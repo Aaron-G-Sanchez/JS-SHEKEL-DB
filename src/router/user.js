@@ -31,7 +31,7 @@ userRouter.get('/:username', async(req, res, next) => {
         throw new Error(`No user by username: ${username.username}`)
       }
 
-      res.send(user)
+      res.send({user: user})
   } catch (err) {
     next(err)
   }
