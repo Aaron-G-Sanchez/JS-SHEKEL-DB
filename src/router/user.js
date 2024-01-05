@@ -17,6 +17,7 @@ userRouter.get('/', async (req, res, next) => {
   }
 })
 
+// Search the db for a given user and if the user does not exist, create a new one
 userRouter.get('/:username', async(req, res, next) => {
   const username = req.params
 
@@ -35,7 +36,37 @@ userRouter.get('/:username', async(req, res, next) => {
   } catch (err) {
     next(err)
   }
+
 })
+
+  // Take a wager from a user's shekelCount and give it to a specified winner
+  userRouter.put('/:username', async(req, res, next) => {
+    // userWithBet is the person who places the bet or the bettor
+    const userWithBet = req.params
+    const { bet, winner } = req.body
+    try {
+      const bettor = await User.findAll({
+        where: {
+          userName: userWithBet.username
+        }
+      })
+
+      const betWinner = await User.findAll({
+        where: {
+          userName: winner
+        }
+      })
+
+      console.log(JSON.stringify(bettor, 0, 2))
+      console.log(JSON.stringify(betWinner, 0, 2))
+
+      res.send("Worked")
+
+    } catch (err) {
+      next(err)
+    }
+  })
+
 
 module.exports = {
   userRouter
