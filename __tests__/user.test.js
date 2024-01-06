@@ -1,9 +1,13 @@
-const { describe, test, expect, beforeAll } = require('@jest/globals')
+const { describe, test, expect, beforeAll, afterAll } = require('@jest/globals')
 
 const { User } = require('../src/models')
 const { seedSync } = require('../db/seed')
 
 beforeAll(async () => {
+  await seedSync()
+})
+
+afterAll(async () => {
   await seedSync()
 })
 
@@ -26,7 +30,9 @@ describe('User model tests', () => {
   test('Should wager and modify the shekel count of the person wagering', async () => {
     // Because all users START with 100 shekels, we know what the values should be when a wager of 10 is  called by a new user
     const wager = 10
-    let user = await User.findByPk(1)
+    let user = await User.create({
+      userName: 'N00b'
+    })
 
     await user.update({
       shekelCount: (user.shekelCount -= wager)
@@ -34,14 +40,13 @@ describe('User model tests', () => {
 
     expect(user).toBeInstanceOf(User)
     expect(user).toHaveProperty('shekelCount')
-    expect(user.userName).toBe('PINCHE')
+    expect(user.userName).toBe('N00b')
     expect(user.shekelCount).toBe(90)
   })
 
   test('Should accept a wager and give add to a users total', async () => {
-    // userWager is refering to the same user as the previous test (id=1) and thus the amount of shekels is not the standard 100
-    const wager = 15
-
+    const wager = 10
+    // UserWager and userReceiver are referring to the two users creted when the repo was started
     let userWager = await User.findByPk(1)
     let userReceiver = await User.findByPk(2)
 
@@ -59,7 +64,7 @@ describe('User model tests', () => {
     expect(userWager).toHaveProperty('shekelCount')
     expect(userReceiver).toHaveProperty('shekelCount')
 
-    expect(userWager.shekelCount).toBe(75)
-    expect(userReceiver.shekelCount).toBe(115)
+    expect(userWager.shekelCount).toBe(90)
+    expect(userReceiver.shekelCount).toBe(110)
   })
 })
