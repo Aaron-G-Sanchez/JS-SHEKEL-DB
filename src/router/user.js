@@ -18,7 +18,7 @@ userRouter.get('/', async (req, res, next) => {
 })
 
 // Search the db for a given user and if the user does not exist, create a new one
-userRouter.get('/:username', async(req, res, next) => {
+userRouter.get('/:username', async (req, res, next) => {
   const username = req.params
 
   try {
@@ -28,45 +28,51 @@ userRouter.get('/:username', async(req, res, next) => {
       }
     })
 
-      if (!user) {
-        throw new Error(`No user by username: ${username.username}`)
-      }
+    if (!user) {
+      throw new Error(`No user by username: ${username.username}`)
+    }
 
-      res.send({user: user})
+    res.send({ user: user })
   } catch (err) {
     next(err)
   }
-
 })
 
-  // Take a wager from a user's shekelCount and give it to a specified winner
-  userRouter.put('/:username', async(req, res, next) => {
-    // userWithBet is the person who places the bet or the bettor
-    const userWithBet = req.params
-    const { bet, winner } = req.body
-    try {
-      const bettor = await User.findAll({
-        where: {
-          userName: userWithBet.username
-        }
-      })
+// Take a wager from a user's shekelCount and give it to a specified winner
 
-      const betWinner = await User.findAll({
-        where: {
-          userName: winner
-        }
-      })
+//* TODO * Need to update to find or create
+userRouter.put('/:username', async (req, res, next) => {
+  // userWithBet is the person who places the bet or the bettor
+  const userWithBet = req.params
+  const { bet, winner } = req.body
 
-      console.log(JSON.stringify(bettor, 0, 2))
-      console.log(JSON.stringify(betWinner, 0, 2))
+  try {
+    let bettor = await User.findOrCreate({
+      where: {
+        userName: userWithBet.username
+      }
+    })
 
-      res.send("Worked")
+    let betWinner = await User.findOrCreate({
+      where: {
+        userName: winner
+      }
+    })
 
-    } catch (err) {
-      next(err)
-    }
-  })
+    await bettor[0].update({
+      shekelCount: (bettor[0].shekelCount -= bet)
+    })
 
+    await betWinner[0].update({
+      shekelCount: (betWinner[0].shekelCount += bet)
+    })
+
+    // returns the better and betWinner AFTER the bet is transferred
+    res.send({ users: [bettor, betWinner] })
+  } catch (err) {
+    next(err)
+  }
+})
 
 module.exports = {
   userRouter
