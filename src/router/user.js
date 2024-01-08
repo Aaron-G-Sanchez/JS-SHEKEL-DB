@@ -17,19 +17,26 @@ userRouter.get('/', async (req, res, next) => {
   }
 })
 
-// Search the db for a given user and if the user does not exist, create a new one
-userRouter.get('/:username', async (req, res, next) => {
-  const username = req.params
+// Search the db for a given user by their userId and userName
+// If the user does not exist, create a new one
+userRouter.get('/:userId/:userName', async (req, res, next) => {
+  const { userId, userName } = req.params
 
   try {
-    const user = await User.findOrCreate({
+    const user = await User.findOne({
       where: {
-        userName: username.username
+        userId: userId,
+        userName: userName
       }
     })
 
     if (!user) {
-      throw new Error(`No user by username: ${username.username}`)
+      const newUser = await User.create({
+        userId: userId,
+        userName: userName
+      })
+      res.send({ user: newUser })
+      return
     }
 
     res.send({ user: user })
@@ -39,23 +46,24 @@ userRouter.get('/:username', async (req, res, next) => {
 })
 
 // Take a wager from a user's shekelCount and give it to a specified winner
-
-//* TODO * Need to update to find or create
-userRouter.put('/:username', async (req, res, next) => {
+userRouter.put('/:userId/:userName', async (req, res, next) => {
   // userWithBet is the person who places the bet or the bettor
-  const userWithBet = req.params
+  const { userId, userName } = req.params
   const { bet, winner } = req.body
 
   try {
+    // Look into better error handling
     let bettor = await User.findOrCreate({
       where: {
-        userName: userWithBet.username
+        userId: userId,
+        userName: userName
       }
     })
 
     let betWinner = await User.findOrCreate({
       where: {
-        userName: winner
+        userId: winner.userId,
+        userName: winner.userName
       }
     })
 
@@ -67,7 +75,9 @@ userRouter.put('/:username', async (req, res, next) => {
       shekelCount: (betWinner[0].shekelCount += bet)
     })
 
-    // returns the better and betWinner AFTER the bet is transferred
+    // Returns the bettor and betWinner AFTER the bet is transferred
+    // Might update to just be a string saying bet was placed
+    // Need to see what this looks like on discords end
     res.send({ users: [bettor, betWinner] })
   } catch (err) {
     next(err)

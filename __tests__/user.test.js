@@ -21,6 +21,7 @@ describe('User model tests', () => {
 
   test('Should add a user to the User table', async () => {
     const newUser = await User.create({
+      userId: '400151152760717335',
       userName: 'N00b'
     })
 

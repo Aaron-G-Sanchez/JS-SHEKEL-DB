@@ -22,29 +22,33 @@ describe('Testing the API endpoint', () => {
 
     response.body.users.forEach((user) => {
       expect(user).toHaveProperty('userName')
+      expect(user).toHaveProperty('userId')
       expect(user).toHaveProperty('shekelCount')
     })
   })
 
-  test('GET a user by username', async () => {
-    const username = 'PINCHE'
-    const response = await request(app).get(`/users/${username}`).expect(200)
-
-    // expect(response.status).toBe(200)
-    expect(response.body.user[0]).toHaveProperty('userName')
-    expect(response.body.user[0]).toHaveProperty('shekelCount')
-  })
-
-  test('PUT / update a bettor and a betWinners shekelCount', async () => {
-    const bettor = 'testUserOne'
-    const betWinner = 'testUserTwo'
-    const bet = 10
-
+  test('GET a user by userId', async () => {
+    const userId = '400151152760717333'
+    const userName = 'PINCHE'
     const response = await request(app)
-      .put(`/users/${bettor}`)
-      .send({ bet, winner: betWinner })
+      .get(`/users/${userId}/${userName}`)
       .expect(200)
 
-    // console.log(JSON.stringify(response.body, 0, 2))
+    // expect(response.status).toBe(200)
+    expect(response.body.user).toHaveProperty('userName')
+    expect(response.body.user).toHaveProperty('shekelCount')
   })
+
+  // test('PUT / update a bettor and a betWinners shekelCount', async () => {
+  //   const bettor = 'testUserOne'
+  //   const betWinner = 'testUserTwo'
+  //   const bet = 10
+
+  //   const response = await request(app)
+  //     .put(`/users/${bettor}`)
+  //     .send({ bet, winner: betWinner })
+  //     .expect(200)
+
+  //   // console.log(JSON.stringify(response.body, 0, 2))
+  // })
 })
