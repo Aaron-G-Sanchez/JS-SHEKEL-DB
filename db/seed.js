@@ -6,9 +6,11 @@ const seedSync = async () => {
 
   const users = [
     {
+      userId: 400151152760717333n,
       userName: 'PINCHE'
     },
     {
+      userId: 400151152760717334n,
       userName: 'Opal'
     }
   ]

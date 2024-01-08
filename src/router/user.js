@@ -39,14 +39,13 @@ userRouter.get('/:username', async (req, res, next) => {
 })
 
 // Take a wager from a user's shekelCount and give it to a specified winner
-
-//* TODO * Need to update to find or create
 userRouter.put('/:username', async (req, res, next) => {
   // userWithBet is the person who places the bet or the bettor
   const userWithBet = req.params
   const { bet, winner } = req.body
 
   try {
+    // Look into better error handling
     let bettor = await User.findOrCreate({
       where: {
         userName: userWithBet.username
@@ -67,7 +66,7 @@ userRouter.put('/:username', async (req, res, next) => {
       shekelCount: (betWinner[0].shekelCount += bet)
     })
 
-    // returns the better and betWinner AFTER the bet is transferred
+    // returns the bettor and betWinner AFTER the bet is transferred
     res.send({ users: [bettor, betWinner] })
   } catch (err) {
     next(err)
