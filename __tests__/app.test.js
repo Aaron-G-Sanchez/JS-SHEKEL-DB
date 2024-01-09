@@ -39,16 +39,42 @@ describe('Testing the API endpoint', () => {
     expect(response.body.user).toHaveProperty('shekelCount')
   })
 
-  // test('PUT / update a bettor and a betWinners shekelCount', async () => {
-  //   const bettor = 'testUserOne'
-  //   const betWinner = 'testUserTwo'
-  //   const bet = 10
+  test('PUT / update a bettor and a betWinners shekelCount', async () => {
+    // Bettor info
+    const bettorId = '400151152760717337'
+    const bettorUsername = 'testUserOne'
+    // Bet winner info
+    const betWinnerId = '400151152760717338'
+    const betWinnerUsername = 'testUserTwo'
+    // Bet amount
+    const bet = 10
 
-  //   const response = await request(app)
-  //     .put(`/users/${bettor}`)
-  //     .send({ bet, winner: betWinner })
-  //     .expect(200)
+    const response = await request(app)
+      .put(`/users/${bettorId}/${bettorUsername}`)
+      .send({
+        bet,
+        winner: {
+          userId: betWinnerId,
+          userName: betWinnerUsername
+        }
+      })
+      .expect(200)
 
-  //   // console.log(JSON.stringify(response.body, 0, 2))
-  // })
+    console.log(JSON.stringify(response.body, 0, 2))
+
+    expect(Array.isArray(response.body.users)).toBe(true)
+
+    // Becasue the two users are being created in this test
+    // The defualt shekelCount will be 100 thus we know what
+    // The values after the bet is applied
+
+    expect(response.body.users[0].shekelCount).toBe(90)
+    expect(response.body.users[1].shekelCount).toBe(110)
+
+    response.body.users.forEach((user) => {
+      expect(user).toHaveProperty('userName')
+      expect(user).toHaveProperty('userId')
+      expect(user).toHaveProperty('shekelCount')
+    })
+  })
 })
