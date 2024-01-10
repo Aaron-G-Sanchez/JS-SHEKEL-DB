@@ -78,7 +78,7 @@ userRouter.put('/:userId/:userName', async (req, res, next) => {
     // Returns the bettor and betWinner AFTER the bet is transferred
     // Might update to just be a string saying bet was placed
     // Need to see what this looks like on discords end
-    res.send({ users: [bettor, betWinner] })
+    res.send({ users: [bettor[0], betWinner[0]] })
   } catch (err) {
     next(err)
   }
