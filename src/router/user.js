@@ -51,6 +51,12 @@ userRouter.put('/:userId/:userName', async (req, res, next) => {
   const { userId, userName } = req.params
   const { bet, winner } = req.body
 
+  // Quick and fast fix. Need to check other ways of implementation
+  if (userId === winner.userId && userName === winner.userName) {
+    res.send({ message: `Sorry! You can't donate to yourself!` })
+    return
+  }
+
   try {
     // Look into better error handling
     let bettor = await User.findOrCreate({
