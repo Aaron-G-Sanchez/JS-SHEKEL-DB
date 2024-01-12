@@ -73,6 +73,11 @@ userRouter.put('/:userId/:userName', async (req, res, next) => {
       }
     })
 
+    if (bet >= bettor[0].shekelCount) {
+      res.send({ message: `Sorry! You can't donate more than you have!` })
+      return
+    }
+
     await bettor[0].update({
       shekelCount: (bettor[0].shekelCount -= bet)
     })
