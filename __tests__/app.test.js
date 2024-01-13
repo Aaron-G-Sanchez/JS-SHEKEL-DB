@@ -4,6 +4,7 @@ const { app } = require('../src/app')
 const { seedSync } = require('../db/seed')
 
 const request = require('supertest')
+const { json } = require('sequelize')
 
 beforeAll(async () => {
   await seedSync()
@@ -60,14 +61,13 @@ describe('Testing the API endpoint', () => {
       })
       .expect(200)
 
-    console.log(JSON.stringify(response.body, 0, 2))
+    // console.log(JSON.stringify(response.body, 0, 2))
 
     expect(Array.isArray(response.body.users)).toBe(true)
 
     // Becasue the two users are being created in this test
     // The defualt shekelCount will be 100 thus we know what
     // The values after the bet is applied
-
     expect(response.body.users[0].shekelCount).toBe(90)
     expect(response.body.users[1].shekelCount).toBe(110)
 
@@ -76,5 +76,29 @@ describe('Testing the API endpoint', () => {
       expect(user).toHaveProperty('userId')
       expect(user).toHaveProperty('shekelCount')
     })
+  })
+
+  test('PUT / updata a bettor should throw error when trying to donate to oneself', async () => {
+    // Better info
+    // Looking for an error when this is the bettor and the bet winner
+    // only declaring one user here satifies the requirements
+    const userId = '400151152760717335'
+    const username = 'Opal'
+
+    const bet = 10
+
+    const response = await request(app)
+      .put(`/users/${userId}/${username}`)
+      .send({
+        bet,
+        winner: {
+          userId,
+          userName: username
+        }
+      })
+      .expect(400)
+
+    expect(response.body).toHaveProperty('status')
+    expect(response.body.status).toBe(400)
   })
 })
