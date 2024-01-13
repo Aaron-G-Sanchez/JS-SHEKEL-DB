@@ -78,7 +78,7 @@ describe('Testing the API endpoint', () => {
     })
   })
 
-  test('PUT / updata a bettor should throw error when trying to donate to oneself', async () => {
+  test('PUT / update a bettor should throw error when trying to donate to oneself', async () => {
     // Better info
     // Looking for an error when this is the bettor and the bet winner
     // only declaring one user here satifies the requirements
@@ -94,6 +94,31 @@ describe('Testing the API endpoint', () => {
         winner: {
           userId,
           userName: username
+        }
+      })
+      .expect(400)
+
+    expect(response.body).toHaveProperty('status')
+    expect(response.body.status).toBe(400)
+  })
+
+  test('PUT / update a better should throw an error when a users shekelCount is less than the bet amount', async () => {
+    // Bettor info
+    const bettorId = '400151152760717337'
+    const bettorUsername = 'testUserOne'
+    // Bet winner info
+    const betWinnerId = '400151152760717338'
+    const betWinnerUsername = 'testUserTwo'
+    // Bet amount
+    const bet = 100
+
+    const response = await request(app)
+      .put(`/users/${bettorId}/${bettorUsername}`)
+      .send({
+        bet,
+        winner: {
+          userId: betWinnerId,
+          userName: betWinnerUsername
         }
       })
       .expect(400)

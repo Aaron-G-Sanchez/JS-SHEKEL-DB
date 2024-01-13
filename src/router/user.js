@@ -81,7 +81,7 @@ userRouter.put('/:userId/:userName', async (req, res, next) => {
       res.status(400)
       res.send({
         message: `Sorry! You can't donate more than you have!`,
-        status: '400'
+        status: 400
       })
       return
     }
