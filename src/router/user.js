@@ -98,7 +98,7 @@ userRouter.put('/:userId/:userName', async (req, res, next) => {
     // Might update to just be a string saying bet was placed
     // Need to see what this looks like on discords end
     res.send({
-      users: [bettor[0], betWinner[0]],
+      message: [bettor[0], betWinner[0]],
       status: 200
     })
   } catch (err) {
