@@ -53,7 +53,11 @@ userRouter.put('/:userId/:userName', async (req, res, next) => {
 
   // Quick and fast fix. Need to check other ways of implementation
   if (userId === winner.userId && userName === winner.userName) {
-    res.send({ message: `Sorry! You can't donate to yourself!` })
+    res.status(400)
+    res.send({
+      message: `Sorry! You can't donate to yourself!`,
+      status: 400
+    })
     return
   }
 
@@ -74,7 +78,11 @@ userRouter.put('/:userId/:userName', async (req, res, next) => {
     })
 
     if (bet >= bettor[0].shekelCount) {
-      res.send({ message: `Sorry! You can't donate more than you have!` })
+      res.status(400)
+      res.send({
+        message: `Sorry! You can't donate more than you have!`,
+        status: '400'
+      })
       return
     }
 
@@ -89,7 +97,10 @@ userRouter.put('/:userId/:userName', async (req, res, next) => {
     // Returns the bettor and betWinner AFTER the bet is transferred
     // Might update to just be a string saying bet was placed
     // Need to see what this looks like on discords end
-    res.send({ users: [bettor[0], betWinner[0]] })
+    res.send({
+      users: [bettor[0], betWinner[0]],
+      status: 200
+    })
   } catch (err) {
     next(err)
   }
