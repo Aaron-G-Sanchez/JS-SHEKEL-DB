@@ -61,24 +61,22 @@ describe('Testing the API endpoint', () => {
       })
       .expect(200)
 
-    // console.log(JSON.stringify(response.body, 0, 2))
-
-    expect(Array.isArray(response.body.users)).toBe(true)
+    expect(Array.isArray(response.body.message)).toBe(true)
 
     // Becasue the two users are being created in this test
     // The defualt shekelCount will be 100 thus we know what
     // The values after the bet is applied
-    expect(response.body.users[0].shekelCount).toBe(90)
-    expect(response.body.users[1].shekelCount).toBe(110)
+    expect(response.body.message[0].shekelCount).toBe(90)
+    expect(response.body.message[1].shekelCount).toBe(110)
 
-    response.body.users.forEach((user) => {
+    response.body.message.forEach((user) => {
       expect(user).toHaveProperty('userName')
       expect(user).toHaveProperty('userId')
       expect(user).toHaveProperty('shekelCount')
     })
   })
 
-  test('PUT / updata a bettor should throw error when trying to donate to oneself', async () => {
+  test('PUT / update a bettor should throw error when trying to donate to oneself', async () => {
     // Better info
     // Looking for an error when this is the bettor and the bet winner
     // only declaring one user here satifies the requirements
@@ -100,5 +98,57 @@ describe('Testing the API endpoint', () => {
 
     expect(response.body).toHaveProperty('status')
     expect(response.body.status).toBe(400)
+  })
+
+  test('PUT / update a better should throw an error when a users shekelCount is less than the bet amount', async () => {
+    // Bettor info
+    const bettorId = '400151152760717337'
+    const bettorUsername = 'testUserOne'
+    // Bet winner info
+    const betWinnerId = '400151152760717338'
+    const betWinnerUsername = 'testUserTwo'
+    // Bet amount
+    const bet = 100
+
+    const response = await request(app)
+      .put(`/users/${bettorId}/${bettorUsername}`)
+      .send({
+        bet,
+        winner: {
+          userId: betWinnerId,
+          userName: betWinnerUsername
+        }
+      })
+      .expect(400)
+
+    expect(response.body).toHaveProperty('message')
+    expect(response.body.message).toBe(
+      `Sorry! You can't donate more than you have!`
+    )
+  })
+
+  test('PUT / should throw and error when trying to donate a non integer number', async () => {
+    // Bettor info
+    const bettorId = '400151152760717337'
+    const bettorUsername = 'testUserOne'
+    // Bet winner info
+    const betWinnerId = '400151152760717338'
+    const betWinnerUsername = 'testUserTwo'
+    // Bet amount
+    const bet = -10
+
+    const response = await request(app)
+      .put(`/users/${bettorId}/${bettorUsername}`)
+      .send({
+        bet,
+        winner: {
+          userId: betWinnerId,
+          userName: betWinnerUsername
+        }
+      })
+      .expect(400)
+
+    expect(response.body).toHaveProperty('message')
+    expect(response.body.message).toBe("Sorry! You can't donate -shekels!")
   })
 })
