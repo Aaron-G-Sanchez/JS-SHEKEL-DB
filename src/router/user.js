@@ -59,6 +59,13 @@ userRouter.put('/:userId/:userName', async (req, res, next) => {
       status: 400
     })
     return
+  } else if (bet < 0) {
+    res.status(400)
+    res.send({
+      message: `Sorry! You can't donate -shekels!`,
+      status: 400
+    })
+    return
   }
 
   try {

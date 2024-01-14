@@ -2,7 +2,7 @@ const { User } = require('../src/models')
 const { db } = require('../db/connection')
 
 const seedSync = async () => {
-  console.log('Loading...')
+  // console.log('Loading...')
 
   const users = [
     {
@@ -18,7 +18,7 @@ const seedSync = async () => {
   await db.sync({ force: true })
   await User.bulkCreate(users)
 
-  console.log('Seed has been planted!')
+  // console.log('Seed has been planted!')
 }
 
 // seedSync()
