@@ -96,8 +96,8 @@ describe('Testing the API endpoint', () => {
       })
       .expect(400)
 
-    expect(response.body).toHaveProperty('status')
-    expect(response.body.status).toBe(400)
+    expect(response.body).toHaveProperty('error')
+    expect(response.body.error).toBe(`Sorry! You can't donate to yourself!`)
   })
 
   test('PUT / update a better should throw an error when a users shekelCount is less than the bet amount', async () => {
@@ -121,8 +121,8 @@ describe('Testing the API endpoint', () => {
       })
       .expect(400)
 
-    expect(response.body).toHaveProperty('message')
-    expect(response.body.message).toBe(
+    expect(response.body).toHaveProperty('error')
+    expect(response.body.error).toBe(
       `Sorry! You can't donate more than you have!`
     )
   })
@@ -148,7 +148,7 @@ describe('Testing the API endpoint', () => {
       })
       .expect(400)
 
-    expect(response.body).toHaveProperty('message')
-    expect(response.body.message).toBe("Sorry! You can't donate -shekels!")
+    expect(response.body).toHaveProperty('error')
+    expect(response.body.error).toBe("Sorry! You can't donate -shekels!")
   })
 })
