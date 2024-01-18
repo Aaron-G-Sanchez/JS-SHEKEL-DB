@@ -55,15 +55,13 @@ userRouter.put('/:userId/:userName', async (req, res, next) => {
   if (userId === winner.userId && userName === winner.userName) {
     res.status(400)
     res.send({
-      message: `Sorry! You can't donate to yourself!`,
-      status: 400
+      error: `Sorry! You can't donate to yourself!`
     })
     return
   } else if (bet < 0) {
     res.status(400)
     res.send({
-      message: `Sorry! You can't donate -shekels!`,
-      status: 400
+      error: `Sorry! You can't donate -shekels!`
     })
     return
   }
@@ -87,8 +85,7 @@ userRouter.put('/:userId/:userName', async (req, res, next) => {
     if (bet >= bettor[0].shekelCount) {
       res.status(400)
       res.send({
-        message: `Sorry! You can't donate more than you have!`,
-        status: 400
+        error: `Sorry! You can't donate more than you have!`
       })
       return
     }
@@ -105,8 +102,7 @@ userRouter.put('/:userId/:userName', async (req, res, next) => {
     // Might update to just be a string saying bet was placed
     // Need to see what this looks like on discords end
     res.send({
-      message: [bettor[0], betWinner[0]],
-      status: 200
+      message: [bettor[0], betWinner[0]]
     })
   } catch (err) {
     next(err)
